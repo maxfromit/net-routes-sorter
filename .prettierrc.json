@@ -1,4 +1,5 @@
 {
+  "semi": false,
   "$schema": "https://json.schemastore.org/prettierrc",
   "singleQuote": true,
   "printWidth": 100
