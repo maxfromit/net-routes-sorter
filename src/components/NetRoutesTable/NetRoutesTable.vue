@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { columns } from 'src/components/NetRoutesTable/columns'
 import { ref } from 'vue'
+import { createNetmaskBlock } from 'src/components/NetRoutesTable/utils/createNetmaskBlock'
 
 const generateUUID = () => {
   return crypto.randomUUID()
@@ -13,7 +14,7 @@ const pagination = ref({
   descending: false,
 })
 
-interface Route {
+export interface Route {
   uuid: string
   address: string
   mask: string
@@ -31,7 +32,7 @@ const routes = [
   { address: '10.0.0.0', mask: '255.255.255.0', gateway: '10.0.0.254', interface: 'Гостевая сеть' },
   {
     address: '172.16.0.0',
-    mask: '255.255.0.0',
+    mask: '255.255.255.0',
     gateway: '172.16.0.254',
     interface: 'Домашняя сеть',
   },
@@ -78,5 +79,28 @@ const routesWithUUID: Route[] = routes.map((route) => ({
     binary-state-sort
     hide-bottom
     table-header-class="bg-grey-3"
-  />
+  >
+    <template #body-cell-address="props">
+      <q-td :props="props">
+        {{ createNetmaskBlock(props.row.address, props.row.mask) }}
+
+        <q-tooltip>
+          <q-list dense dark>
+            <q-item>
+              <q-item-section>
+                <q-item-label>IP:</q-item-label>
+                <q-item-label caption>{{ props.row.address }}</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item>
+              <q-item-section>
+                <q-item-label>Маска:</q-item-label>
+                <q-item-label caption>{{ props.row.mask }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-tooltip>
+      </q-td>
+    </template>
+  </q-table>
 </template>
